@@ -180,12 +180,7 @@ Table 3 compares decision policies using expected outcomes. The PCR Order Rate v
 | PureML_CART          | 0.4960        | 0.1582             | 0.0788               | 0.3585                   | 0.1705                   | 0.7904                           | 0.8016                            |
 
 
-Figure 7 shows the confusion matrix shows how often the boosted trees model correctly or incorrectly predicts each decision class (Order Now, Wait, Do Not Order). While the model performs well in identifying “Order Now” and “Do Not Order,” it struggles with the “Wait” class, indicating difficulty in capturing intermediate decision states.
 
-### Figure 7. Confusion matrix for boosted trees model
-<p align="center">
-  <img src="results/Fig7.png" width="500">
-</p>
 
 Table 4 illustrates how the hybrid model makes patient-specific decisions. For example, patient 622 has U_OrderNow = -0.3200, U_Wait = -0.1766, and U_DoNotOrder = 1.2041, leading to a “Do Not Order” recommendation because the expected utility of not testing is substantially higher. This pattern is consistent across cases, where low pChangeMgmt values (often near 0) indicate that testing is unlikely to influence management. Variables such as pViral, pReturn72h, and pUnnecessaryAbx quantify uncertainty in infection type, clinical risk, and overtreatment, while TAT_hours (e.g., 6–7 hours in several cases) reduces the value of delayed information. These examples demonstrate that the model avoids testing when expected benefit is low and timing reduces usefulness, producing decisions that are both interpretable and aligned with clinical reasoning.
 
