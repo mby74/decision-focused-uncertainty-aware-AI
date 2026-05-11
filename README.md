@@ -75,9 +75,7 @@ Pure machine learning models achieve reasonable classification accuracy but prod
 
 In contrast, the hybrid decision-focused model produces decisions that are more consistent, more interpretable, and more aligned with clinical reasoning. By explicitly modeling value-of-information and timing, the model avoids tests that are unlikely to change management and prioritizes tests when they are expected to improve outcomes.
 
-
-
-
+## Output Comparison
 
 Table 1 demonstrates that pure machine learning models produce outputs limited to prediction, such as probabilities of infection (0–1) and risk estimates like 72-hour return, but they do not provide information about the consequences of different actions. The hybrid model extends these outputs by introducing decision-relevant quantities, including the probability that PCR testing will change management (decision impact), the risk of harm such as unnecessary antibiotic use (estimate harm), and operational constraints such as PCR turnaround time (typically 1–14 hours).
 
@@ -107,20 +105,16 @@ Finally, decision consistency (0–1) measures agreement with the optimal policy
 
 
 
-
+Figure 1 shows the difference between predictive workflows and decision-focused models that explicitly evaluate alternative actions and their downstream outcomes.
 
 ### Figure 1. Descriptive vs Decision-Science AI models for clinical decision pathways
-
 <p align="center">
   <img src="results/Fig1.png" width="700">
 </p>
 
-<p align="center">
-  <em>This figure contrasts predictive workflows with decision-focused models that compare actions and their downstream consequences.</em>
 </p>
 
 ## Empirical Results from Simulation
-
 
 
 Table 2 shows that the hybrid model achieves Accuracy = 0.5888, MacroF1 = 0.4078, and Balanced Accuracy = 0.4244, indicating moderate agreement with the reference policy across decision classes. More importantly, decision-specific errors are relatively low: the Unnecessary Order Rate is 0.0448, meaning few low-value tests are recommended, and the Missed Useful Order Rate is 0.0848, indicating limited missed opportunities where testing would have changed management. The Decision Consistency Proxy = 0.6096 suggests the model aligns with the optimal policy in a majority of cases. Together, these values indicate that although traditional classification metrics are modest, the model performs well in terms of decision quality and consistency.
@@ -161,6 +155,29 @@ Table 4 illustrates how the hybrid model makes patient-specific decisions. For e
 | 1346      | DoNotOrder       | -0.2075   | -0.2012 | 1.1201       | 0.6153 | 0.0000      | 0.0728     | 0.3156           | 7.0691    |
 | 287       | DoNotOrder       | -0.1919   | -0.1445 | 1.1560       | 0.3127 | 0.0438      | 0.0291     | 0.2358           | 5.6974    |
 | 1602      | DoNotOrder       | -0.1385   | -0.0863 | 1.2046       | 0.2477 | 0.0000      | 0.0543     | 0.3084           | 3.1468    |
+
+
+
+
+## Decision Mechanism
+
+### Figure 2. Impact of PCR turnaround time on value of information
+<p align="center">
+  <img src="results/Fig4.png" width="700">
+</p>
+
+
+### Figure 3. Probability that PCR changes management vs turnaround time
+<p align="center">
+  <img src="results/Fig5.png" width="700">
+</p>
+
+
+### Figure 4. Decision boundary based on probability of changing management
+<p align="center">
+  <img src="results/Fig6.png" width="700">
+</p>
+
 
 
 #### Results stored in:
