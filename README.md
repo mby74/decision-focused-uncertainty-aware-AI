@@ -67,6 +67,8 @@ compare_patient_outcomes_cd3.m
 
 # Results
 
+## Overview
+
 The results demonstrate a clear distinction between predictive performance and decision quality.
 
 Pure machine learning models achieve reasonable classification accuracy but produce clinically meaningful errors. These include unnecessary diagnostic testing in low-value scenarios and missed opportunities to test when information could meaningfully alter management. These errors arise because the model is not designed to evaluate the consequences of actions.
@@ -75,31 +77,49 @@ In contrast, the hybrid decision-focused model produces decisions that are more 
 
 
 
-Figure 1. Conceptual Difference Between Predictive and Decision-Focused AI
-
-(Insert figure here if available, e.g., from slides)
-
-Table 1 contrasts the functional differences between pure machine learning models and the hybrid decision-focused model. While both approaches can predict outcomes, only the hybrid model explicitly compares alternative actions and incorporates timing and value-of-information into decision-making. Variables such as value of information refer to whether new data (e.g., a test result) is expected to influence management, while decision confidence reflects the strength of preference among competing actions. The hybrid model also supports counterfactual reasoning, meaning it can evaluate what would happen under different decisions. Overall, the table highlights that pure ML models are predictive, whereas the hybrid model is designed for decision optimization.
 
 
+Table 1 demonstrates that pure machine learning models produce outputs limited to prediction, such as probabilities of infection (0–1) and risk estimates like 72-hour return, but they do not provide information about the consequences of different actions. The hybrid model extends these outputs by introducing decision-relevant quantities, including the probability that PCR testing will change management (decision impact), the risk of harm such as unnecessary antibiotic use (estimate harm), and operational constraints such as PCR turnaround time (typically 1–14 hours).
 
-### Table 1. Comparison of Model Capabilities
+The model further computes action-specific utilities—U_OrderNow, U_Wait, and U_DoNotOrder—each typically ranging from about -1 to +2, which represent the expected net benefit of each decision. These utilities allow direct comparison of actions rather than relying on thresholds applied to predicted probabilities. Based on these comparisons, the model produces a final recommendation (1 = order now, 2 = wait, 3 = do not order), along with decision confidence (magnitude of preference) and decision comparison (difference in utilities, ranging approximately from -2 to +2).
 
-| Capability                  | Pure ML | Hybrid Model |
-|---------------------------|--------|-------------|
-| Predict outcomes           | Yes    | Yes         |
-| Compare actions            | No     | Yes         |
-| Incorporate timing         | No     | Yes         |
-| Value of information       | No     | Yes         |
-| Decision confidence        | No     | Yes         |
-| Counterfactual reasoning   | No     | Yes         |
+Finally, decision consistency (0–1) measures agreement with the optimal policy in simulation. Overall, the table shows that pure ML models answer “what is likely to happen,” whereas the hybrid model answers “what should be done,” by explicitly linking predictions to decisions, timing, and expected outcomes.
 
 
-Figure 2. Impact of Turnaround Time on Decision Value
 
-(Insert figure illustrating VOI decay or timing effect)
+### Table 1. Comparison of Hybrid Decision Model vs Pure ML Outputs
 
-Empirical Results from Simulation
+| Capability                | Pure ML | Range / Type      | Hybrid Model Clinical Interpretation |
+|--------------------------|--------|-------------------|--------------------------------------|
+| Predict outcome / state  | Yes    | 0 – 1             | Probability infection is viral       |
+| Estimate risk            | Yes    | 0 – 1             | Risk of 72-hour return               |
+| Decision impact          | No     | 0 – 1             | Probability PCR will change management |
+| Estimate harm            | No     | 0 – 1             | Risk of unnecessary antibiotics      |
+| Incorporate timing       | No     | 1 – ~14 hours     | PCR turnaround time                  |
+| Value of information     | No     | 0 – 1             | Time-adjusted usefulness of PCR      |
+| Utility of ordering now  | No     | (-1 , +2)         | Net benefit of ordering PCR now      |
+| Utility of waiting       | No     | (-1 , +2)         | Net benefit of delaying decision     |
+| Utility of not ordering  | No     | (-1 , +2)         | Net benefit of avoiding PCR          |
+| Final recommendation     | No     | 1, 2, 3           | 1 = Order now, 2 = Wait, 3 = Do not order |
+| Decision confidence      | No     | ≥ 0               | Strength of recommendation           |
+| Decision comparison      | No     | (-2 , +2)         | Direction and magnitude of preference |
+| Decision consistency     | No     | 0 – 1             | Agreement with optimal strategy (simulation only) |
+
+
+
+
+
+### Figure 1. Descriptive vs Decision-Science AI models for clinical decision pathways
+
+<p align="center">
+  <img src="results/Fig1.png" width="700">
+</p>
+
+<p align="center">
+  <em>This figure contrasts predictive workflows with decision-focused models that compare actions and their downstream consequences.</em>
+</p>
+
+## Empirical Results from Simulation
 
 
 
