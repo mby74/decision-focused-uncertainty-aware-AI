@@ -1,4 +1,4 @@
-# A Hybrid Modeling Approach for Clinical Decision-Making Under Uncertainty
+# Hybrid Modeling for Clinical Decision-Making Under Uncertainty
 # Overview
 
 Clinical decision-making is fundamentally different from prediction. In real-world settings, clinicians are not asked to estimate probabilities alone, they must decide between competing actions under uncertainty, often with incomplete, delayed, or conflicting information. Current AI systems largely fail in this regard because they are designed to optimize predictive accuracy rather than decision quality.
