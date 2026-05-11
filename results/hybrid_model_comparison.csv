@@ -1,0 +1,2 @@
+Model,Accuracy,MacroF1,BalancedAccuracy,UnnecessaryOrderRate,MissedUsefulOrderRate,DecisionConsistencyProxy
+HybridMLMechanistic,0.5888,0.407801967353287,0.424395600007985,0.0448,0.0848,0.6096
