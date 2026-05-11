@@ -109,7 +109,7 @@ Figure 1 shows the difference between predictive workflows and decision-focused 
 
 ### Figure 1. Descriptive vs Decision-Science AI models for clinical decision pathways
 <p align="center">
-  <img src="results/Fig1.png" width="700">
+  <img src="results/Fig1.png" width="500">
 </p>
 
 </p>
@@ -121,19 +121,19 @@ Figure 2 shows that the value of information decreases as turnaround time increa
 
 ### Figure 2. Impact of PCR turnaround time on value of information
 <p align="center">
-  <img src="results/Fig4.png" width="700">
+  <img src="results/Fig2.png" width="500">
 </p>
 
 
 ### Figure 3. Probability that PCR changes management vs turnaround time
 <p align="center">
-  <img src="results/Fig5.png" width="700">
+  <img src="results/Fig3.png" width="500">
 </p>
 
 
 ### Figure 4. Decision boundary based on probability of changing management
 <p align="center">
-  <img src="results/Fig6.png" width="700">
+  <img src="results/Fig4.png" width="500">
 </p>
 ## Empirical Results from Simulation
 
@@ -153,13 +153,13 @@ Table 2 shows that the hybrid model achieves Accuracy = 0.5888, MacroF1 = 0.4078
 
 ### Figure 5. Decision-relevant error comparison across machine learning models
 <p align="center">
-  <img src="results/Fig2.png" width="700">
+  <img src="results/Fig5.png" width="500">
 </p>
 
 
 ### Figure 6. Pure ML vs hybrid model error comparison
 <p align="center">
-  <img src="results/Fig7.png" width="700">
+  <img src="results/Fig6.png" width="500">
 </p>
 
 
@@ -184,7 +184,7 @@ Figure 7 shows the confusion matrix shows how often the boosted trees model corr
 
 ### Figure 7. Confusion matrix for boosted trees model
 <p align="center">
-  <img src="results/Fig3.png" width="600">
+  <img src="results/Fig7.png" width="500">
 </p>
 
 Table 4 illustrates how the hybrid model makes patient-specific decisions. For example, patient 622 has U_OrderNow = -0.3200, U_Wait = -0.1766, and U_DoNotOrder = 1.2041, leading to a “Do Not Order” recommendation because the expected utility of not testing is substantially higher. This pattern is consistent across cases, where low pChangeMgmt values (often near 0) indicate that testing is unlikely to influence management. Variables such as pViral, pReturn72h, and pUnnecessaryAbx quantify uncertainty in infection type, clinical risk, and overtreatment, while TAT_hours (e.g., 6–7 hours in several cases) reduces the value of delayed information. These examples demonstrate that the model avoids testing when expected benefit is low and timing reduces usefulness, producing decisions that are both interpretable and aligned with clinical reasoning.
