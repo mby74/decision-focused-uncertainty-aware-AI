@@ -75,7 +75,7 @@ Pure machine learning models achieve reasonable classification accuracy but prod
 
 In contrast, the hybrid decision-focused model produces decisions that are more consistent, more interpretable, and more aligned with clinical reasoning. By explicitly modeling value-of-information and timing, the model avoids tests that are unlikely to change management and prioritizes tests when they are expected to improve outcomes.
 
-## Output Comparison
+## Outputs of Hybrid Decision Model
 
 Table 1 demonstrates that pure machine learning models produce outputs limited to prediction, such as probabilities of infection (0–1) and risk estimates like 72-hour return, but they do not provide information about the consequences of different actions. The hybrid model extends these outputs by introducing decision-relevant quantities, including the probability that PCR testing will change management (decision impact), the risk of harm such as unnecessary antibiotic use (estimate harm), and operational constraints such as PCR turnaround time (typically 1–14 hours).
 
@@ -114,52 +114,10 @@ Figure 1 shows the difference between predictive workflows and decision-focused 
 
 </p>
 
-## Empirical Results from Simulation
-
-
-Table 2 shows that the hybrid model achieves Accuracy = 0.5888, MacroF1 = 0.4078, and Balanced Accuracy = 0.4244, indicating moderate agreement with the reference policy across decision classes. More importantly, decision-specific errors are relatively low: the Unnecessary Order Rate is 0.0448, meaning few low-value tests are recommended, and the Missed Useful Order Rate is 0.0848, indicating limited missed opportunities where testing would have changed management. The Decision Consistency Proxy = 0.6096 suggests the model aligns with the optimal policy in a majority of cases. Together, these values indicate that although traditional classification metrics are modest, the model performs well in terms of decision quality and consistency.
-
-
-
-### Table 2. Hybrid Model Performance Summary
-
-| Model                  | Accuracy | MacroF1 | BalancedAccuracy | UnnecessaryOrderRate | MissedUsefulOrderRate | DecisionConsistencyProxy |
-|-----------------------|---------|--------|------------------|----------------------|------------------------|---------------------------|
-| HybridMLMechanistic   | 0.5888  | 0.4078 | 0.4244           | 0.0448               | 0.0848                 | 0.6096                    |
-
-Table 3 compares decision policies using expected outcomes. The PCR Order Rate varies widely, with the SVM model ordering tests in 98.72% of cases (0.9872), indicating substantial overuse, whereas other models such as Random Forest (0.4928) and Logistic Regression (0.5040) show more balanced behavior. Outcome risks are similar but slightly worse for aggressive testing policies: for example, SVM yields Expected_Return72h = 0.1365 and Expected_ICUTransfer = 0.0691, while Random Forest shows 0.1580 and 0.0788, respectively. The Expected_UnnecessaryAbx remains high across models (≈0.35–0.40), contributing to Expected Composite Harm values around 0.165–0.170. Agreement metrics further differentiate models: SVM has low agreement (0.4752 observed, 0.4864 optimal), while Random Forest achieves higher agreement (0.8096 observed, 0.8240 optimal). These results indicate that extreme testing policies do not improve outcomes and that more balanced approaches better align with optimal decision strategies.
-
-
-
-
-### Table 3. Policy-Level Outcome Comparison
-
-| Policy                | PCR_Order_Rate | Expected_Return72h | Expected_ICUTransfer | Expected_UnnecessaryAbx | Expected_CompositeHarm | Decision_Agreement_With_Observed | Decision_Agreement_With_PolicyRef |
-|----------------------|---------------|--------------------|----------------------|--------------------------|--------------------------|----------------------------------|-----------------------------------|
-| PureML_SVM           | 0.9872        | 0.1365             | 0.0691               | 0.4000                   | 0.1656                   | 0.4752                           | 0.4864                            |
-| PureML_Logistic      | 0.5040        | 0.1565             | 0.0775               | 0.3592                   | 0.1694                   | 0.7952                           | 0.8096                            |
-| PureML_BoostedTrees  | 0.5152        | 0.1570             | 0.0779               | 0.3601                   | 0.1700                   | 0.7552                           | 0.7600                            |
-| PureML_RandomForest  | 0.4928        | 0.1580             | 0.0788               | 0.3582                   | 0.1704                   | 0.8096                           | 0.8240                            |
-| PureML_CART          | 0.4960        | 0.1582             | 0.0788               | 0.3585                   | 0.1705                   | 0.7904                           | 0.8016                            |
-
-
-Table 4 illustrates how the hybrid model makes patient-specific decisions. For example, patient 622 has U_OrderNow = -0.3200, U_Wait = -0.1766, and U_DoNotOrder = 1.2041, leading to a “Do Not Order” recommendation because the expected utility of not testing is substantially higher. This pattern is consistent across cases, where low pChangeMgmt values (often near 0) indicate that testing is unlikely to influence management. Variables such as pViral, pReturn72h, and pUnnecessaryAbx quantify uncertainty in infection type, clinical risk, and overtreatment, while TAT_hours (e.g., 6–7 hours in several cases) reduces the value of delayed information. These examples demonstrate that the model avoids testing when expected benefit is low and timing reduces usefulness, producing decisions that are both interpretable and aligned with clinical reasoning.
-
-
-### Table 4. Example Case-Level Decision Explanations (First 5 Patients)
-
-| patient_id | RecommendedAction | U_OrderNow | U_Wait  | U_DoNotOrder | pViral | pChangeMgmt | pReturn72h | pUnnecessaryAbx | TAT_hours |
-|-----------|------------------|-----------|--------|--------------|--------|-------------|------------|------------------|-----------|
-| 622       | DoNotOrder       | -0.3200   | -0.1766 | 1.2041       | 0.1380 | 0.0094      | 0.1354     | 0.1811           | 6.7039    |
-| 2133      | DoNotOrder       | -0.2606   | -0.1753 | 1.1766       | 0.3288 | 0.0000      | 0.1054     | 0.2598           | 6.3708    |
-| 1346      | DoNotOrder       | -0.2075   | -0.2012 | 1.1201       | 0.6153 | 0.0000      | 0.0728     | 0.3156           | 7.0691    |
-| 287       | DoNotOrder       | -0.1919   | -0.1445 | 1.1560       | 0.3127 | 0.0438      | 0.0291     | 0.2358           | 5.6974    |
-| 1602      | DoNotOrder       | -0.1385   | -0.0863 | 1.2046       | 0.2477 | 0.0000      | 0.0543     | 0.3084           | 3.1468    |
-
-
-
 
 ## Decision Mechanism
+
+Figure 2 shows that the value of information decreases as turnaround time increases, demonstrating that delayed test results are less useful for decision-making. This supports the model’s incorporation of time-dependent value in evaluating diagnostic strategies. Figure 3 illustrates the relationship between turnaround time and the probability that a test will change clinical management. While there is variability, longer turnaround times tend to reduce the likelihood that test results will meaningfully influence decisions. Figure 4 shows how the model determines whether to order a test by comparing the difference in utility between ordering and not ordering. The decision boundary (near zero) separates regions where testing is beneficial from those where it is not, with higher probabilities of changing management favoring test ordering.
 
 ### Figure 2. Impact of PCR turnaround time on value of information
 <p align="center">
@@ -177,6 +135,75 @@ Table 4 illustrates how the hybrid model makes patient-specific decisions. For e
 <p align="center">
   <img src="results/Fig6.png" width="700">
 </p>
+## Empirical Results from Simulation
+
+
+Table 2 shows that the hybrid model achieves Accuracy = 0.5888, MacroF1 = 0.4078, and Balanced Accuracy = 0.4244, indicating moderate agreement with the reference policy across decision classes. More importantly, decision-specific errors are relatively low: the Unnecessary Order Rate is 0.0448, meaning few low-value tests are recommended, and the Missed Useful Order Rate is 0.0848, indicating limited missed opportunities where testing would have changed management. The Decision Consistency Proxy = 0.6096 suggests the model aligns with the optimal policy in a majority of cases. Together, these values indicate that although traditional classification metrics are modest, the model performs well in terms of decision quality and consistency.
+
+
+
+### Table 2. Hybrid Model Performance Summary
+
+| Model                  | Accuracy | MacroF1 | BalancedAccuracy | UnnecessaryOrderRate | MissedUsefulOrderRate | DecisionConsistencyProxy |
+|-----------------------|---------|--------|------------------|----------------------|------------------------|---------------------------|
+| HybridMLMechanistic   | 0.5888  | 0.4078 | 0.4244           | 0.0448               | 0.0848                 | 0.6096                    |
+
+
+ Figure 5 compares unnecessary order rates and missed useful order rates across models. While most models show moderate trade-offs between the two error types, the SVM model exhibits a very high unnecessary order rate, indicating over-testing. The results emphasize that predictive accuracy alone does not ensure good decision-making performance. Figure 6 compares decision-relevant errors between pure machine learning models and the hybrid model. The hybrid model achieves a better balance between unnecessary testing and missed useful tests, demonstrating improved decision quality through explicit utility-based reasoning.
+
+### Figure 5. Decision-relevant error comparison across machine learning models
+<p align="center">
+  <img src="results/Fig2.png" width="700">
+</p>
+
+
+### Figure 6. Pure ML vs hybrid model error comparison
+<p align="center">
+  <img src="results/Fig7.png" width="700">
+</p>
+
+
+
+Table 3 compares decision policies using expected outcomes. The PCR Order Rate varies widely, with the SVM model ordering tests in 98.72% of cases (0.9872), indicating substantial overuse, whereas other models such as Random Forest (0.4928) and Logistic Regression (0.5040) show more balanced behavior. Outcome risks are similar but slightly worse for aggressive testing policies: for example, SVM yields Expected_Return72h = 0.1365 and Expected_ICUTransfer = 0.0691, while Random Forest shows 0.1580 and 0.0788, respectively. The Expected_UnnecessaryAbx remains high across models (≈0.35–0.40), contributing to Expected Composite Harm values around 0.165–0.170. Agreement metrics further differentiate models: SVM has low agreement (0.4752 observed, 0.4864 optimal), while Random Forest achieves higher agreement (0.8096 observed, 0.8240 optimal). These results indicate that extreme testing policies do not improve outcomes and that more balanced approaches better align with optimal decision strategies.
+
+
+
+
+### Table 3. Policy-Level Outcome Comparison
+
+| Policy                | PCR_Order_Rate | Expected_Return72h | Expected_ICUTransfer | Expected_UnnecessaryAbx | Expected_CompositeHarm | Decision_Agreement_With_Observed | Decision_Agreement_With_PolicyRef |
+|----------------------|---------------|--------------------|----------------------|--------------------------|--------------------------|----------------------------------|-----------------------------------|
+| PureML_SVM           | 0.9872        | 0.1365             | 0.0691               | 0.4000                   | 0.1656                   | 0.4752                           | 0.4864                            |
+| PureML_Logistic      | 0.5040        | 0.1565             | 0.0775               | 0.3592                   | 0.1694                   | 0.7952                           | 0.8096                            |
+| PureML_BoostedTrees  | 0.5152        | 0.1570             | 0.0779               | 0.3601                   | 0.1700                   | 0.7552                           | 0.7600                            |
+| PureML_RandomForest  | 0.4928        | 0.1580             | 0.0788               | 0.3582                   | 0.1704                   | 0.8096                           | 0.8240                            |
+| PureML_CART          | 0.4960        | 0.1582             | 0.0788               | 0.3585                   | 0.1705                   | 0.7904                           | 0.8016                            |
+
+
+Figure 7 shows the confusion matrix shows how often the boosted trees model correctly or incorrectly predicts each decision class (Order Now, Wait, Do Not Order). While the model performs well in identifying “Order Now” and “Do Not Order,” it struggles with the “Wait” class, indicating difficulty in capturing intermediate decision states.
+
+### Figure 7. Confusion matrix for boosted trees model
+<p align="center">
+  <img src="results/Fig3.png" width="600">
+</p>
+
+Table 4 illustrates how the hybrid model makes patient-specific decisions. For example, patient 622 has U_OrderNow = -0.3200, U_Wait = -0.1766, and U_DoNotOrder = 1.2041, leading to a “Do Not Order” recommendation because the expected utility of not testing is substantially higher. This pattern is consistent across cases, where low pChangeMgmt values (often near 0) indicate that testing is unlikely to influence management. Variables such as pViral, pReturn72h, and pUnnecessaryAbx quantify uncertainty in infection type, clinical risk, and overtreatment, while TAT_hours (e.g., 6–7 hours in several cases) reduces the value of delayed information. These examples demonstrate that the model avoids testing when expected benefit is low and timing reduces usefulness, producing decisions that are both interpretable and aligned with clinical reasoning.
+
+
+### Table 4. Example Case-Level Decision Explanations (First 5 Patients)
+
+| patient_id | RecommendedAction | U_OrderNow | U_Wait  | U_DoNotOrder | pViral | pChangeMgmt | pReturn72h | pUnnecessaryAbx | TAT_hours |
+|-----------|------------------|-----------|--------|--------------|--------|-------------|------------|------------------|-----------|
+| 622       | DoNotOrder       | -0.3200   | -0.1766 | 1.2041       | 0.1380 | 0.0094      | 0.1354     | 0.1811           | 6.7039    |
+| 2133      | DoNotOrder       | -0.2606   | -0.1753 | 1.1766       | 0.3288 | 0.0000      | 0.1054     | 0.2598           | 6.3708    |
+| 1346      | DoNotOrder       | -0.2075   | -0.2012 | 1.1201       | 0.6153 | 0.0000      | 0.0728     | 0.3156           | 7.0691    |
+| 287       | DoNotOrder       | -0.1919   | -0.1445 | 1.1560       | 0.3127 | 0.0438      | 0.0291     | 0.2358           | 5.6974    |
+| 1602      | DoNotOrder       | -0.1385   | -0.0863 | 1.2046       | 0.2477 | 0.0000      | 0.0543     | 0.3084           | 3.1468    |
+
+
+
+
+
 
 
 
