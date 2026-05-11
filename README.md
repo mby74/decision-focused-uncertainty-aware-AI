@@ -1,7 +1,7 @@
 # Advances in Clinical Decision Support 
 # Overview
 
-Clinical decision-making is fundamentally different from prediction. In real-world settings, clinicians are not asked to estimate probabilities alone—they must decide between competing actions under uncertainty, often with incomplete, delayed, or conflicting information. Current AI systems largely fail in this regard because they are designed to optimize predictive accuracy rather than decision quality.
+Clinical decision-making is fundamentally different from prediction. In real-world settings, clinicians are not asked to estimate probabilities alone, they must decide between competing actions under uncertainty, often with incomplete, delayed, or conflicting information. Current AI systems largely fail in this regard because they are designed to optimize predictive accuracy rather than decision quality.
 
 This repository addresses that gap by developing and evaluating a decision-focused AI framework that explicitly models actions, their consequences, and the uncertainty that determines which action is most appropriate. Instead of asking “What is the probability of disease?”, the framework asks “Given this uncertainty, what should we do?”
 
