@@ -109,7 +109,7 @@ Figure 1 shows the difference between predictive workflows and decision-focused 
 
 ### Figure 1. Descriptive vs Decision-Science AI models for clinical decision pathways
 <p align="center">
-  <img src="results/Fig1.png" width="500">
+  <img src="results/Fig1.png" width="700">
 </p>
 
 </p>
